@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Photo</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+
+    <h2>Upload Photo</h2>
+
+    <!-- File Upload Form -->
+    <form id="uploadForm" onsubmit="event.preventDefault();">
+        <label for="fileInput">Choose a photo:</label>
+        <input type="file" id="fileInput" accept="image/*"><br><br>
+
+        <!-- Display the Image Preview -->
+        <div id="hey">
+            <img src="" alt="hey">
+            <img id="imagePreview" src="" alt="Image Preview" style="max-width: 300px; display: none;"><br><br>
+        </div>
+        <!-- Button to Capture Screenshot -->
+        <button type="button" onclick="captureScreenshot()">Take Screenshot</button>
+    </form>
+
+    <script>
+        // Access the file input and preview elements
+        const fileInput = document.getElementById('fileInput');
+        const imagePreview = document.getElementById('imagePreview');
+        
+        // Event listener for file input change
+        fileInput.addEventListener('change', function() {
+            const file = fileInput.files[0]; // Get the first selected file
+
+            if (file) {
+                // Create a FileReader object to read the file
+                const reader = new FileReader();
+
+                // Once the file is read, display the preview
+                reader.onload = function(event) {
+                    // Set the src of the image preview to the file content
+                    imagePreview.src = event.target.result;
+                    imagePreview.style.display = 'block'; // Make the preview visible
+                };
+
+                // Read the file as a data URL (base64 encoded)
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Function to capture screenshot
+        function captureScreenshot() {
+            const content = document.getElementById('hey');
+            
+            // Use html2canvas to take a screenshot of the content element
+            html2canvas(content).then(function(canvas) {
+                // Convert the canvas to a data URL (image)
+                const img = canvas.toDataURL("image/png");
+
+                // Create an invisible download link
+                const link = document.createElement('a');
+                link.href = img;
+                link.download = 'screenshot.png'; // Set default file name
+                link.click(); // Simulate click to trigger download
+            });
+        }
+    </script>
+
+</body>
+</html>
